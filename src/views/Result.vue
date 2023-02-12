@@ -1,17 +1,23 @@
 <template>
   <div class="demo-image__placeholder">
     <div class="block">
-      <span class="demonstration">默认</span>
+      <span class="demonstration"></span>
       <el-image :src="src"></el-image>
     </div>
-    <div class="block">
+
+    <!-- <div class="block">
       <span class="demonstration">自定义</span>
       <el-image :src="src">
         <div slot="placeholder" class="image-slot">
           加载中<span class="dot">...</span>
         </div>
       </el-image>
-    </div>
+    </div> -->
+
+    <el-row>
+      <el-button type="primary">重新识别</el-button>
+      <el-button type="primary" plain>复制到剪切板</el-button>
+    </el-row>
   </div>
 </template>
 
@@ -25,6 +31,6 @@
   }
 </script>
 
-<style lang="scss" scoped>
+<style lang="css" scoped>
 
 </style>
