@@ -1,10 +1,16 @@
 <template>
   <div class="upload">
-    <el-upload class="upload-demo" drag action="https://jsonplaceholder.typicode.com/posts/" multiple>
-      <i class="el-icon-upload"></i>
-      <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+    <el-upload class="upload-demo" drag action="https://jsonplaceholder.typicode.com/posts/" multiple @success="handleUploadSuccess">
+      <div class="upload-tips">
+        <i class="el-icon-upload"></i>
+        <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+      </div>
       <!-- <div class="el-upload__tip" slot="tip">请上传图片，且不超过500kb</div> -->
     </el-upload>
+
+    <div class="preview-container">
+      <img v-for="img in images" :src="img" class="preview-image"/>
+    </div>
 
     <br>
     <br>
@@ -18,18 +24,19 @@
 <script>
 import router from '@/router';
 
-
 export default {
   name: "VueTestMain",
   data() {
-    return {};
+    return {
+      images: []
+    };
   },
   mounted() {
   },
   methods: {
-    // 点击跳转事件
-    clickRes(item) {
-      console.log(item);
+    handleUploadSuccess(response, file, fileList) {
+      // 添加新的预览图片
+      this.images.push(URL.createObjectURL(file.raw));
     }
   },
   components: { router }
@@ -53,11 +60,20 @@ export default {
   width: 630px;
 }
 
-.el-icon-upload::before {
-  margin-top: -24px !important;
+.upload-tips {
+  margin-top: -100px;
 }
 
-.el-upload__text {
-  margin-top: -24px
+.preview-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.preview-image {
+  width: 200px;
+  height: 200px;
+  margin: 10px;
 }
 </style>
