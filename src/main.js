@@ -5,7 +5,7 @@ import Vue from 'vue';
 // import 'element-ui/lib/theme-chalk/index.css';
 
 // 按需引入
-import { Button, Row, Upload, Image } from 'element-ui';
+import { Button, Row, Upload, Image, Dialog } from 'element-ui';
 
 // 进入router
 import router from './router';
@@ -24,6 +24,7 @@ Vue.use(Button);
 Vue.use(Row);
 Vue.use(Upload);
 Vue.use(Image);
+Vue.use(Dialog)
 
 new Vue({
   el: '#app',
