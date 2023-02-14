@@ -5,10 +5,10 @@
       v-if="!imgUrl"
       class="upload-demo"
       drag
-      action="https://jsonplaceholder.typicode.com/posts/"
+      action="http://47.99.217.31:8007/ocr"
       multiple
       accept=".jpg,.jpeg,.png"
-      :auto-upload="true"
+      :auto-upload="false"
       :on-change="imgSaveToUrl"
       :on-success="handleSuccess"
     >
@@ -67,6 +67,7 @@ export default {
     // 保存本地图片地址
     imgSaveToUrl(file) {
       this.imgUrl = URL.createObjectURL(file.raw);
+      console.log(this.imgUrl);
     },
     // 显示弹窗
     showDialog() {
