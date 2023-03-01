@@ -1,131 +1,148 @@
 <template>
-  <div class="upload">
-    <!-- 上传组件 -->
+  <div id="app">
     <el-upload
-      v-if="!imgUrl"
-      class="upload-demo"
-      drag
-      action="http://47.99.217.31:8007/ocr"
-      multiple
-      accept=".jpg,.jpeg,.png"
+      ref="uploadPic"
+      action=""
+      :limit="1"
+      list-type="picture-card"
       :auto-upload="false"
-      :on-change="imgSaveToUrl"
-      :on-success="handleSuccess"
-    >
-      <i class="el-icon-upload"></i>
-      <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+      :on-change="fileChange"
+      v-loading="isLoading">
+      <i slot="default" class="el-icon-plus"></i>
+      <div slot="file" slot-scope="{ file }">
+        <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
+        <span class="el-upload-list__item-actions">
+          <span class="el-upload-list__item-delete" @click="handleRemove(file)">
+            <i class="el-icon-delete"></i>
+          </span>
+        </span>
+      </div>
     </el-upload>
-
-
-    <!-- 预览组件 -->
-    <div v-else class="preview">
-      <el-upload
-        class="upload-demo"
-        drag
-        action="https://jsonplaceholder.typicode.com/posts/"
-        multiple
-        accept=".jpg,.jpeg,.png"
-        :auto-upload="false"
-        :on-change="imgSaveToUrl"
-      >
-        <img :src="imgUrl" @click="showDialog" />
-      </el-upload>
+    <div style="display: flex" class="button">
+      <el-select v-model="value" placeholder="请选择">
+        <el-option
+          v-for="item in options"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value">
+        </el-option>
+      </el-select>
+      <el-button @click="showData" :loading="isLoading">{{
+        isLoading ? '识别中' : '识别'
+      }}</el-button>
     </div>
-
-
-    <!-- 弹窗组件 -->
-    <!-- <el-dialog :visible.sync="dialogVisible" width="50%"> -->
-      <!-- <img width="100%" :src="imgUrl" /> -->
-    <!-- </el-dialog> -->
-
-    <br>
-    <el-row>
-      <el-button @click="$router.push('/result')" type="primary">开始识别</el-button>
-    </el-row>
   </div>
 </template>
 
 <script>
+import axios from 'axios'
+import store from '../store'
+
 export default {
+  name: 'App',
   data() {
     return {
-      imgUrl: "", // 本地图片地址
-      dialogVisible: false, // 弹窗显示状态
-    };
+      imgFile: '',
+      isLoading: false,
+      options: [
+        {
+          value: '0',
+          label: '教育部学历证书电子注册备案表'
+        },
+        {
+          value: '1',
+          label: '教育部学籍在线验证报告'
+        },
+        {
+          value: '2',
+          label: '中国高等教育证书查询结果（零散查询）'
+        }
+      ],
+      value: ''
+    }
   },
+  mounted() {},
   methods: {
-    // 处理上传成功的文件
-    handleSuccess(response, file, fileList) {
-      // response是服务器返回的数据，file是上传的文件，fileList是上传的文件列表
-      // 你可以在这里做一些操作，比如保存文件的信息，显示文件的链接等
-      console.log(response);
+    fileChange(file) {
+      this.imgFile = file
+    },
+    handleRemove(file) {
+      this.$refs.uploadPic.handleRemove(file)
+    },
+    showData() {
+      this.isLoading = true
+      const file = new FormData()
+      let urlf = ''
+      file.append('file', this.imgFile.raw)
+      console.log(this.imgFile.raw)
+      console.log(URL.createObjectURL(this.imgFile.raw))
 
-      this.uploadImg();
-      console.log(response, file, fileList);
-    },
-
-    // 保存本地图片地址
-    imgSaveToUrl(file) {
-      this.imgUrl = URL.createObjectURL(file.raw);
-      console.log(this.imgUrl);
-    },
-    // 显示弹窗
-    showDialog() {
-      this.dialogVisible = true;
-    },
-    // 上传图片
-    uploadImg() {
-      // 调用接口上传图片，成功后清空本地图片地址
-      this.imgUrl = "";
-    },
-  },
-};
+      store.set('ImgData/file', this.imgFile)
+      if (this.value !== '') {
+        urlf = '?image_type=' + this.value
+      }
+      axios
+        .post(`http://47.99.217.31:8007/ocr${urlf}`, file, {
+          timeout: 300000
+        })
+        .then(res => {
+          const data = res.data.result
+          const keys = Object.keys(data).filter(item => item !== 'stencil')
+          const result = []
+          keys.forEach(item => {
+            result.push(data[item])
+          })
+          store.set('ImgData/imgData', data)
+          // sessionStorage.setItem('imgData', JSON.stringify(imgData))
+          this.$router.push({ path: `/result` })
+        })
+      this.input = ''
+    }
+  }
+}
 </script>
 
-<style lang="scss">
-.upload {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.el-upload-dragger {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 410px;
-  width: 630px;
-}
-
-.upload-tips {
-  margin-top: -100px;
-}
-
-.preview-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  margin-top: 20px;
-}
-
-.preview img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-
-
-.el-upload-list__item-name {
+<style lang="scss" scoped>
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   text-align: center;
+  color: #2c3e50;
+  margin-top: 60px;
+
+  display: flex;
+  align-items: center;
+  flex-direction: column;
 }
 
-.el-upload-list__item-name {
-  text-align: center;
-  /* 添加一个动画 */
-  transition: display 1s;
-  display: none;
+.input {
+  width: 40%;
+  margin-bottom: 30px;
+
+  /deep/.el-textarea__inner {
+    width: 100%;
+  }
 }
 
+.button {
+  margin-top: 30px;
+}
+
+#editImgDialog {
+  // 弹窗部分
+  ::v-deep .yi-dialog {
+    border-radius: 12px;
+  }
+
+  // 取消弹窗头部
+  ::v-deep .yi-dialog__header {
+    display: none;
+  }
+
+  // 取消弹窗内容padding
+  ::v-deep .yi-dialog__body {
+    padding: 0;
+  }
+}
 </style>

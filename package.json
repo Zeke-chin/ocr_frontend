@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@highlightjs/vue-plugin": "^1.0.2",
+    "axios": "^1.3.4",
     "babel-preset-es2015": "^6.24.1",
     "core-js": "^3.8.3",
     "element-ui": "^2.15.13",
@@ -17,7 +18,11 @@
     "vue": "^2.6.14",
     "vue-highlight.js": "^3.1.0",
     "vue-highlightjs": "^1.3.3",
-    "vue-router": "^3.6.5"
+    "vue-json-viewer": "2",
+    "vue-router": "^3.6.5",
+    "vuex": "^4.1.0",
+    "vuex-pathify": "^3.0.0-beta",
+    "vuex-persist": "^3.1.3"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",

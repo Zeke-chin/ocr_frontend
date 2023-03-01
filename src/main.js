@@ -5,7 +5,9 @@ import Vue from "vue";
 // import 'element-ui/lib/theme-chalk/index.css';
 
 // 按需引入
-import { Button, Row, Upload, Image, Dialog } from "element-ui";
+import { Button, Row, Upload, Image, Dialog, Input, Select, Option } from "element-ui";
+import JsonViewer from 'vue-json-viewer';
+import 'vue-json-viewer/style.css'
 
 // 进入router
 import router from "./router";
@@ -24,6 +26,10 @@ Vue.config.productionTip = false;
 
 // 按需引入
 Vue.use(Button);
+Vue.use(JsonViewer);
+Vue.use(Select);
+Vue.use(Option);
+Vue.use(Input);
 Vue.use(Row);
 Vue.use(Upload);
 Vue.use(Image);
