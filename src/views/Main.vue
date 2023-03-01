@@ -47,11 +47,11 @@ export default {
       options: [
         {
           value: '0',
-          label: '教育部学历证书电子注册备案表'
+          label: '教育部学籍在线验证报告'
         },
         {
           value: '1',
-          label: '教育部学籍在线验证报告'
+          label: '教育部学历证书电子注册备案表'
         },
         {
           value: '2',
