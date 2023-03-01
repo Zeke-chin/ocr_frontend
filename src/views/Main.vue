@@ -19,7 +19,7 @@
       </div>
     </el-upload>
     <div style="display: flex" class="button">
-      <el-select v-model="value" placeholder="请选择">
+      <el-select v-model="value" style="width: 300px" placeholder="请选择">
         <el-option
           v-for="item in options"
           :key="item.value"
