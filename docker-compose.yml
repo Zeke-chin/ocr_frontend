@@ -1,0 +1,10 @@
+version: '2'
+services:
+  ocr-f:
+    hostname: ocr-f
+    container_name: ocr-f
+    image: ocr-f
+    working_dir: /workspace
+    ports:
+      - '16066:8080'
+
