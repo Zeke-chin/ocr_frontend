@@ -7,6 +7,6 @@ services:
     working_dir: /workspace
     ports:
       - '16066:8080'
-  volumes:
-    - ./:/workspace
+    volumes:
+      - ./:/workspace
 
