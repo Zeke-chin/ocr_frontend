@@ -82,7 +82,7 @@ export default {
         urlf = '?image_type=' + this.value
       }
       axios
-        .post(`http://47.99.217.31:8007/ocr${urlf}`, file, {
+        .post(`http://172.24.24.86:8007/ocr${urlf}`, file, {
           timeout: 300000
         })
         .then(res => {
